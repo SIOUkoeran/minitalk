@@ -6,7 +6,7 @@
 /*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 18:44:32 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/02 23:44:25 by mkim3            ###   ########.fr       */
+/*   Updated: 2022/05/03 00:44:14 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,24 @@
 #include <signal.h>
 #include <stdio.h>
 
+struct	sigaction server_act;
+struct  sigaction client_act;
+
 typedef struct s_info{
 	pid_t 	server_pid;
 	pid_t 	client_pid;
-	struct	sigaction act;	
 	char* 	message;
 } t_info;
 
 typedef struct s_server_info{
-	pid_t 		server_pid;
-	sigset_t 	set;
-	struct 		sigaction act;
+	pid_t	client_pid;
 } t_server_info;
 
 int		ft_atoi(char *s);
-void	ft_get_input(int a, char** c);
-void	ft_transfer_to_server(t_info info);
-int		ft_to_binary(int num);
-void	ft_connect(int num);
+t_info	ft_get_input(int a, char** c, t_info info);
+void	ft_transfer_to_server();
+char	*ft_to_binary(int num);
+void	ft_connect(int sig_num, siginfo_t *siginfo_t, void *t);
+void	ft_open_server(int sig_num, siginfo_t *siginfo_t, void *t);
+void	ft_putnbr_fd(int n, int fd);
 #endif

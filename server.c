@@ -6,31 +6,24 @@
 /*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 18:51:05 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/02 22:00:21 by mkim3            ###   ########.fr       */
+/*   Updated: 2022/05/03 00:42:26 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-void	sig_handler(int signo)
+int main(int args, char **argv)
 {
-	
-}
-
-int main(int args, char **argv){
-	pid_t			pid;
-	t_server_info	*info;
-	int				result;
-	
-	pid = getpid();
-	printf("server pid : %d\n", pid);
-	result = sigemptyset(&(info->act.sa_mask));
-	if (result == -1)
+	void(argv);
+	if (args != 1)
 		exit(1);
-	sigaddset(&(info->act.sa_mask, SIGQUIT));
-	signal(SIGINT, (void *)sig_handler);
-	while (1)
-	{
-		
-	}
+	server_act.sa_flags = SA_SIGINFO;
+	server_act.__sigaction_u.__sa_sigaction = ft_open_server;
+	sigemptyset(&client_act.sa_flags);
+	sigaddset(&client_act.sa_flags, SIGINT);
+	sigaction(SIGUSR1, &client_act, NULL);
+	sigaction(SIGUSR2, &client_act, NULL);
+	ft_put_nbr(getpid(),1);
+	while(1)
+		pause();
 }

@@ -6,11 +6,35 @@
 /*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 20:43:19 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/02 22:25:19 by mkim3            ###   ########.fr       */
+/*   Updated: 2022/05/03 00:42:09 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
+
+void	ft_putnbr_fd(int n, int fd)
+{
+	if (n < 0)
+	{
+		write(fd, "-", 1);
+		if (n == -2147483648)
+			write(fd, "2147483648", 10);
+		else
+		{
+			n *= -1;
+			ft_putnbr_fd(n, fd);
+		}
+	}
+	else
+	{
+		if (n > 9)
+		{
+			ft_putnbr_fd(n / 10, fd);
+		}
+		n = 48 + n % 10;
+		write(fd, &n, 1);
+	}
+}
 
 static int	ft_isspace(char c)
 {
@@ -44,7 +68,7 @@ int	ft_atoi(char *s)
 	return (result * sign);
 }
 
-int	ft_to_binary(int num)
+char	*ft_to_binary(int num)
 {
 	char 	*s;
 	int		idx;

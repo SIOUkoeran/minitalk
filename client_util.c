@@ -6,25 +6,12 @@
 /*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 19:14:33 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/02 23:46:09 by mkim3            ###   ########.fr       */
+/*   Updated: 2022/05/03 02:15:35 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "minitalk.h"
-
-void	ft_connect(int signal_num, t_info info)
-{
-	info.act.sa_flags = SA_SIGINFO;
-	sigemptyset(&info.act.sa_mask);
-	if (signal_num == SIGUSR1)
-	{
-		sigaction(SIGUSR1, &info.act, NULL);
-		sigaction(SIGUSR2, &info.act, NULL);
-	}
-	else
-		exit(1);
-}
 
 t_info	ft_get_input(int args, char** argv, t_info info)
 {	
@@ -42,45 +29,16 @@ t_info	ft_get_input(int args, char** argv, t_info info)
 	return (info);
 }
 
-static void	ft_free_str_and_bit(char *str, char *bit)
+void	ft_connect(int signo, siginfo_t *siginfo_t, void *t)
 {
-	free(str);
-	free(bit);
-}
+	(void)t;
+	(void)siginfo_t;
 
-static void ft_bitmask(char str, t_info info)
-{
-	char	*str;
-	char	*bit;
-	char	temp;
-
-	str = ft_to_binary((int) str);
-	if (!str)
+	if (!client_act.sa_flags)
 		exit(1);
-	bit = "10000000";
-	while (!str++ && !bit++)
-	{
-		temp = str & bit;
-		if (temp == 1)
-			kill(info.server_pid, SIGUSR1);
-		else
-			kill(info.server_pid, SIGUSR2);
-	}
-	ft_free_str_and_bit(str, bit);
-}
-
-void	ft_transfer_to_server(t_info info)
-{
-	pid_t	server;
-	char	*str;
-	
-	server = info.server_pid;
-	str = info.message;
-	if (!server)
+	if (sigaction(SIGUSR1, &client_act, NULL) == -1)
 		exit(1);
-	while (!str)
-	{
-		ft_bitmask(str, info);
-		str++;
-	}
+	if (sigaction(SIGUSR2, &client_act, NULL) == -1)
+		exit(1);
+	ft_transfer_to_server();
 }
