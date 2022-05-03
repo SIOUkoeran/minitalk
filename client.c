@@ -6,66 +6,82 @@
 /*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/28 18:51:41 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/03 02:13:09 by mkim3            ###   ########.fr       */
+/*   Updated: 2022/05/03 22:41:57 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-t_info	info;
+static t_info	ft_get_input(int args, char** argv, t_info info)
+{	
+	if (args < 3)
+		exit(1);
+	info.server_pid = ft_atoi(argv[1]);
+	if (!info.server_pid || info.server_pid <= 100 || info.server_pid >= 99999)
+		exit(1);
+	info.client_pid = getpid();
+	if (!info.client_pid)
+		exit(1);
+	info.message = argv[2];
+	if (!info.message)
+		exit(1);
+	return (info);
+}
 
-static void ft_bitmask()
+static void ft_bitmask(t_info info)
 {
-	int	bit;
-	int	i;
-
-	bit = 8;
-	i = -1;
-	while (!info.message[++i])
+	int	bit = 8;
+	int	i = -1;
+	
+	while (info.message[++i] != '\0')
 	{
-		bit = 8;
 		while (--bit >= 0)
 		{
 			if ((info.message[i] >> bit) & 1)
+			{
 				kill(info.server_pid, SIGUSR1);
+				usleep(100);
+			}
 			else
+			{
 				kill(info.server_pid, SIGUSR2);
-			sleep(0.01);
+				usleep(100);
+			}
 		}
+		bit = 8;
 	}
-	if (!info.message[i])
+	if (info.message[i] == '\0')
 	{
 		while (bit-- > 0)
 		{
-			kill(info.server_pid, SIGUSR2);
-			sleep(0.01);
+			kill(info.server_pid, SIGUSR1);
+			usleep(100);
 		}
 	}
+	write(1, "successful\n", 11);
 }
 
-void	ft_transfer_to_server()
+static void	ft_transfer_to_server(t_info info)
 {
 	char	*str;
 
 	str = info.message;
 	if (!info.server_pid)
+	{
+		write(1,"invalid server_pid\n", 19);
 		exit(1);
-	ft_bitmask();
+	}
+	ft_bitmask(info);
 }
 
-int main(int args, char **argv)
+int	main(int args, char **argv)
 {		
+	t_info	info;
+	
 	if (args == 3)
 	{
 		info = ft_get_input(args, argv, info);
-		client_act.sa_flags = SA_SIGINFO;
-		sigemptyset(&client_act.sa_flags);
-		sigaddset(&client_act.sa_flags, SIGINT);
-		client_act.__sigaction_u.__sa_sigaction = ft_connect;
-		sigaction(SIGUSR1, &client_act, NULL);
-		sigaction(SIGUSR2, &client_act, NULL);
-		kill(info.server_pid, SIGUSR1);
-		pause();
+		ft_transfer_to_server(info);
 		return (0);
 	}
 	else

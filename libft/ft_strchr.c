@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: mkim3 <mkim3@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/28 18:44:32 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/03 22:41:16 by mkim3            ###   ########.fr       */
+/*   Created: 2021/11/15 21:22:22 by mkim3             #+#    #+#             */
+/*   Updated: 2021/12/02 15:08:17 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H_
-# define MINITALK_H_
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <stdio.h>
 #include "libft.h"
 
-typedef struct s_info{
-	pid_t 	server_pid;
-	pid_t 	client_pid;
-	char	*message;
-} t_info;
+char	*ft_strchr(char const *s, int c)
+{
+	int	i;
 
-#endif
+	i = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == c)
+			return ((char *)(s + i));
+		i++;
+	}
+	if (s[i] == c)
+		return ((char *)(s + i));
+	return (NULL);
+}

@@ -1,40 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft.c                                            :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mkim3 <mkim3@student.42seoul.kr>           +#+  +:+       +#+        */
+/*   By: mkim3 <mkim3@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/02 20:43:19 by mkim3             #+#    #+#             */
-/*   Updated: 2022/05/03 00:42:09 by mkim3            ###   ########.fr       */
+/*   Created: 2021/11/16 16:22:27 by mkim3             #+#    #+#             */
+/*   Updated: 2021/12/22 21:50:57 by mkim3            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	if (n < 0)
-	{
-		write(fd, "-", 1);
-		if (n == -2147483648)
-			write(fd, "2147483648", 10);
-		else
-		{
-			n *= -1;
-			ft_putnbr_fd(n, fd);
-		}
-	}
-	else
-	{
-		if (n > 9)
-		{
-			ft_putnbr_fd(n / 10, fd);
-		}
-		n = 48 + n % 10;
-		write(fd, &n, 1);
-	}
-}
+#include "libft.h"
 
 static int	ft_isspace(char c)
 {
@@ -45,7 +21,7 @@ static int	ft_isspace(char c)
 	return (0);
 }
 
-int	ft_atoi(char *s)
+int	ft_atoi(const char *s)
 {
 	int	sign;
 	int	result;
@@ -66,19 +42,4 @@ int	ft_atoi(char *s)
 		s++;
 	}
 	return (result * sign);
-}
-
-char	*ft_to_binary(int num)
-{
-	char 	*s;
-	int		idx;
-	
-	s = malloc(sizeof(int) * 8);
-	idx = 8;
-	while (--idx > 0)
-	{
-		s[idx] = num % 2;
-		num /= 2;
-	}
-	return (s);
 }
